@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">PhotoProgress</string>
+    <string name="buttonSetNotification_title">Set Notification</string>
+    <string name="buttonSaveNotification_title">Save</string>
+    <string name="notification_title">Photo Progress</string>
+    <string name="notification_subject">It\'s time to take a photo!</string>
+    <string name="title_activity_set_notification">SetNotificationActivity</string>
 </resources>
