@@ -10,11 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TimePicker;
+import java.util.Calendar;
 
 import com.secretproject.photoprogress.R;
 import com.secretproject.photoprogress.notifications.NotificationReceiver;
 
-import java.util.Calendar;
 
 public class SetNotificationActivity extends AppCompatActivity {
 
@@ -30,6 +30,10 @@ public class SetNotificationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(true);
+        timePicker.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -39,28 +43,45 @@ public class SetNotificationActivity extends AppCompatActivity {
 //            }
 //        });
     }
-    public void triggerAlarm(View v){
+
+    public void setNotification(View v){
+        triggerAlarm();
+
+        //Close activity
+        this.finish();
+    }
+
+    public void triggerAlarm(){
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         alarmIntent = new Intent(SetNotificationActivity.this, NotificationReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(SetNotificationActivity.this, 0, alarmIntent, 0);
 
-        //TimePicker is not in use. Tomorrow..
         TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.clearFocus();
 
-        Calendar alarmStartTime = Calendar.getInstance();
-        alarmStartTime.add(Calendar.MINUTE, 1);
+        int hours = timePicker.getCurrentHour();
+        int minutes  = timePicker.getCurrentMinute();
+
+//        Calendar alarmStartTime = Calendar.getInstance();
+//        alarmStartTime.add(Calendar.MINUTE, 1);
 
         //Repeating alarm should be added
-//        alarmManager.setRepeating(AlarmManager.RTC, alarmStartTime.getTimeInMillis(), getInterval(), pendingIntent);
-        alarmManager.set(AlarmManager.RTC, alarmStartTime.getTimeInMillis(), pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC, this.getTimeInMilliseconds(hours, minutes), 86400000, pendingIntent);
+        alarmManager.set(AlarmManager.RTC, this.getTimeInMilliseconds(hours, minutes), pendingIntent);
+
     }
-    //Not in use
-    private int getInterval(){
-        int seconds = 60;
-        int milliseconds = 1000;
-        int repeatMS = seconds * 2 * milliseconds;
-        return repeatMS;
+
+    private long getTimeInMilliseconds(int hours, int minutes){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hours);
+        cal.set(Calendar.MINUTE, minutes);
+        long totalMilliseconds = cal.getTimeInMillis();
+
+        if (totalMilliseconds < Calendar.getInstance().getTimeInMillis()) {
+            totalMilliseconds += 86400000;
+        }
+
+        return totalMilliseconds;
     }
 }
