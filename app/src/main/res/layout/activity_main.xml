@@ -16,4 +16,15 @@
         android:layout_marginTop="20dp"
         android:text="@string/buttonSetNotification_title" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/navigate_To_Take_Photo_Button_title"
+        android:id="@+id/navigetToTakePhotoBtn"
+        android:layout_below="@+id/buttonSetNotification"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="61dp" />
+
+
 </RelativeLayout>

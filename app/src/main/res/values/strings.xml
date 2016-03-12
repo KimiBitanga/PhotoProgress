@@ -5,4 +5,14 @@
     <string name="notification_title">Photo Progress</string>
     <string name="notification_subject">It\'s time to take a photo!</string>
     <string name="title_activity_set_notification">SetNotificationActivity</string>
+    <string name="title_activity_take_photo">TakePhotoActivity</string>
+    <string name="navigate_To_Take_Photo_Button_title">Let\'s take some photos</string>
+    <string name="Take_Photo_Button_Content">Take photo</string>
+    <string name="Change_Camera_Button_Content">Change camera</string>
+    <string name="maskOn">Mask on</string>
+    <string name="maskOff">Mask off</string>
+
+
+
 </resources>
+

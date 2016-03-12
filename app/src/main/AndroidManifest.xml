@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.secretproject.photoprogress">
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+    <uses-permission  android:name="android.permission.WRITE_EXTERNAL_STORAGE"  android:maxSdkVersion="18" />
+    <uses-permission  android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -29,6 +28,10 @@
         <activity
             android:name=".activities.SetNotificationActivity"
             android:label="@string/title_activity_set_notification"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TakePhotoActivity.TakePhotoActivity"
+            android:label="@string/title_activity_take_photo"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
