@@ -28,10 +28,9 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        PhotoAlbum photoAlbum=null;
-        if(photoAlbum!=null) {
-            Toast.makeText(this, photoAlbum.getName(), Toast.LENGTH_SHORT).show();
-        }
+//        if(photoAlbum!=null) {
+//            Toast.makeText(this, photoAlbum.getName(), Toast.LENGTH_SHORT).show();
+//        }
 
         onShowVideoPreviewButtonListener();
         onMakeImagePostersButtonListener();
@@ -76,12 +75,12 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
 
     public void onMakeNewPhotoButtonListener(){
 
-        PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
-
         Button makenewPhotoBtn=(Button)findViewById(R.id.makeNewPhotoBtn);
         makenewPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
+
                 startActivity(new Intent(PhotoAlbumOverviewActivity.this, TakePhotoActivity.class));
             }
         });

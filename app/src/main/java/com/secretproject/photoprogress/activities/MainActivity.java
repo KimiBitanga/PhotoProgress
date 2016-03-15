@@ -68,7 +68,6 @@ public class MainActivity extends Activity {
 
         fillExistingAlbums();
 
-        photoAlbumHelper = new PhotoAlbumHelper();
     }
 
     public void onCreateNewAlbumButtonListener(){

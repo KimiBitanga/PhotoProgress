@@ -90,8 +90,10 @@ public class SettingsActivity extends AppCompatActivity {
 
                     album.setNotificationTime(NotificationHelper.getTimeInMilliseconds(hours, minutes));
                 }
-
+                
                 settings.add(album);
+
+                PhotoAlbumHelper.CurrentPhotoAlbum = album;
 
                 try {
                     XmlHelper.saveToXmlFile(settings);
@@ -100,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 }
 
-                closeActivity();
+                startActivity(new Intent(SettingsActivity.this, PhotoAlbumOverviewActivity.class));
             }
         });
 
