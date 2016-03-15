@@ -13,6 +13,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 import com.secretproject.photoprogress.R;
+import com.secretproject.photoprogress.helpers.NotificationHelper;
 import com.secretproject.photoprogress.notifications.NotificationReceiver;
 
 
@@ -63,25 +64,15 @@ public class SetNotificationActivity extends AppCompatActivity {
         int hours = timePicker.getCurrentHour();
         int minutes  = timePicker.getCurrentMinute();
 
+        SettingsActivity.tvNotification.setText(hours + ":" + ((minutes > 9) ? minutes : "0" + minutes));
+
 //        Calendar alarmStartTime = Calendar.getInstance();
 //        alarmStartTime.add(Calendar.MINUTE, 1);
 
         //Repeating alarm should be added
 //        alarmManager.setRepeating(AlarmManager.RTC, this.getTimeInMilliseconds(hours, minutes), 86400000, pendingIntent);
-        alarmManager.set(AlarmManager.RTC, this.getTimeInMilliseconds(hours, minutes), pendingIntent);
+        alarmManager.set(AlarmManager.RTC, NotificationHelper.getTimeInMilliseconds(hours, minutes), pendingIntent);
 
     }
 
-    private long getTimeInMilliseconds(int hours, int minutes){
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, hours);
-        cal.set(Calendar.MINUTE, minutes);
-        long totalMilliseconds = cal.getTimeInMillis();
-
-        if (totalMilliseconds < Calendar.getInstance().getTimeInMillis()) {
-            totalMilliseconds += 86400000;
-        }
-
-        return totalMilliseconds;
-    }
 }

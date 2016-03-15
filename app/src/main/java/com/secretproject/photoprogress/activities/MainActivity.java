@@ -39,14 +39,17 @@ import java.util.Collection;
 
 public class MainActivity extends Activity {
 
-private PhotoAlbum selectedPhotoAlbum;
+    private PhotoAlbum selectedPhotoAlbum;
     private Collection<PhotoAlbum> existingPhotoAlbums;
+
+    public static PhotoAlbumHelper photoAlbumHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //TODO Questions to discuss :
         /*
-        *   If user is using one camera first time, should we allow him to swith camera for next photos ?
+        *   If user is using one camera first time, should we allow him to switch camera for next photos ?
         *   We have to save CameraIndex and OpacityLevel if user set it.
         *   Sending PhotoAlbum variable from activity to activity
         *   Creating folder and saving PhotoAlbum
@@ -64,6 +67,8 @@ private PhotoAlbum selectedPhotoAlbum;
         onGoToAlbumOverviewButtonListener();
 
         fillExistingAlbums();
+
+        photoAlbumHelper = new PhotoAlbumHelper();
     }
 
     public void onCreateNewAlbumButtonListener(){
