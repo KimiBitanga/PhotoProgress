@@ -1,18 +1,28 @@
 <resources>
     <string name="app_name">PhotoProgress</string>
-    <string name="buttonSetNotification_title">Set Notification</string>
+    <string name="create_new_album_button_content">Create new photo album</string>
     <string name="buttonSaveNotification_title">Save</string>
     <string name="notification_title">Photo Progress</string>
     <string name="notification_subject">It\'s time to take a photo!</string>
     <string name="title_activity_set_notification">SetNotificationActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_take_photo">TakePhotoActivity</string>
-    <string name="navigate_To_Take_Photo_Button_title">Let\'s take some photos</string>
+    <string name="go_to_album_overview_button_content">Go to the album</string>
     <string name="Take_Photo_Button_Content">Take photo</string>
     <string name="Change_Camera_Button_Content">Change camera</string>
     <string name="maskOn">Mask on</string>
     <string name="maskOff">Mask off</string>
-
-
-
+    <string name="app_description_and_welcome_message">Welcome to photo progress application, where you can take photos and make video of them, and play it or share it to see how you, someone or something has changed over time.</string>
+    <string name="select_album_helping_text">Select album by click on it</string>
+    <string name="select_album_information_message">Please select album.</string>
+    <string name="title_activity_photo_album_overview">PhotoAlbumOverview</string>
+    <string name="make_new_photo_button_content">Make new photo</string>
+    <string name="album_name_label">Album name: </string>
+    <string name="album_description_label">Album description: </string>
+    <string name="show_video_preview_button_content">Show album video</string>
+    <string name="make_image_posters_button_content">Make posters from album images</string>
+    <string name="save_button_content">Save></string>
+    <string name="cancel_button_content">Cancel</string>
 </resources>
+
 
