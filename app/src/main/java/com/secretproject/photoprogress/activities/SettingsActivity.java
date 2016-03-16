@@ -17,6 +17,8 @@ import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
 import com.secretproject.photoprogress.helpers.XmlHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -62,7 +64,6 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PhotoAlbum album = new PhotoAlbum();
-                ArrayList<PhotoAlbum> settings = new ArrayList<PhotoAlbum>();
 
                 EditText name = (EditText) findViewById(R.id.etName);
                 EditText description = (EditText) findViewById(R.id.etDescription);
@@ -83,6 +84,23 @@ public class SettingsActivity extends AppCompatActivity {
                     return;
                 }
 
+
+                Collection<PhotoAlbum> photoAlbums = PhotoAlbumHelper.getAllPhotoAlbums();
+                int id = -1;
+
+                if (photoAlbums != null && photoAlbums.size() > 0) {
+                    for (PhotoAlbum photoAlbum : photoAlbums) {
+                        if (id < photoAlbum.getId()) {
+                            id = photoAlbum.getId();
+                        }
+                    }
+                }
+                else {
+                    photoAlbums = new ArrayList<PhotoAlbum>();
+                }
+
+                album.setId(id + 1);
+
                 if (!notificationTime.getText().toString().isEmpty()) {
                     String[] hoursAndMinutes = notificationTime.getText().toString().split(":");
                     int hours = Integer.parseInt(hoursAndMinutes[0].trim());
@@ -90,16 +108,17 @@ public class SettingsActivity extends AppCompatActivity {
 
                     album.setNotificationTime(NotificationHelper.getTimeInMilliseconds(hours, minutes));
                 }
-                
-                settings.add(album);
+
+                photoAlbums.add(album);
 
                 PhotoAlbumHelper.CurrentPhotoAlbum = album;
 
                 try {
-                    XmlHelper.saveToXmlFile(settings);
+                    //XmlHelper.saveToXmlFile(settings);
+                    PhotoAlbumHelper.writeAllPhotoAlbums(photoAlbums);
                 }
                 catch (Exception e){
-
+                    e.printStackTrace();
                 }
 
                 startActivity(new Intent(SettingsActivity.this, PhotoAlbumOverviewActivity.class));
