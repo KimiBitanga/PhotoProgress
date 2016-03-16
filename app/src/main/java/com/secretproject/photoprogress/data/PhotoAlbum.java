@@ -2,10 +2,14 @@ package com.secretproject.photoprogress.data;
 
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by milan.curcic on 9.3.2016..
@@ -19,7 +23,6 @@ public class PhotoAlbum implements Parcelable {
     private NotificationInterval notificationInterval;
     private boolean isMaskOn;
     private int maskOpacityLevel;
-    private Bitmap lastPhoto;
     private Collection<Bitmap> albumPhotos;
 
     // TODO: 9.3.2016. Add photo collection field
@@ -72,9 +75,27 @@ public class PhotoAlbum implements Parcelable {
     }
 
     public Bitmap getLastPhoto(){
-        if (lastPhoto==null){
-            lastPhoto = null;//TODO: GetLastPhoto!!!
+
+        Bitmap lastPhoto = null;
+        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "PhotoProgress" + File.separator );
+        File files[] = directory.listFiles();
+        File lastPhotoFile=null;
+        for (File f : files) {
+            if(f.getName().startsWith(Integer.toString(getId()) + "_")){
+                if(lastPhotoFile==null) {
+                    lastPhotoFile = f;
+                }
+                else{
+                    if(new Date(f.lastModified()).after(new Date(lastPhotoFile.lastModified()))){
+                        lastPhotoFile = f;
+                    }
+                }
+            }
         }
+        if(lastPhotoFile!=null) {
+            lastPhoto = BitmapFactory.decodeFile(lastPhotoFile.getAbsolutePath());
+        }
+
         return lastPhoto;
     }
 

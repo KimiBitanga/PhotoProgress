@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,9 +26,17 @@ import android.widget.Toast;
 
 import com.secretproject.photoprogress.R;
 import com.secretproject.photoprogress.ViewModels.CameraPreview;
+import com.secretproject.photoprogress.data.PhotoAlbum;
+import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TakePhotoActivity extends AppCompatActivity {
 
+    private PhotoAlbum photoAlbum;
     private TakePhotoActivity thisActivity;
 
     private static final String TAG="TakePhotoActivity";
@@ -49,6 +58,8 @@ public class TakePhotoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        photoAlbum = PhotoAlbumHelper.CurrentPhotoAlbum;
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if(savedInstanceState !=null){
             currentCameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX);
@@ -66,6 +77,12 @@ public class TakePhotoActivity extends AppCompatActivity {
         onSaveImageButtonListener();
         onSeekBarListener();
         onMaskSwitchListener();
+
+        ImageView mskImageView = (ImageView) findViewById(R.id.maskImgView);
+        Bitmap lastAlbumPhoto= photoAlbum.getLastPhoto();
+        if(lastAlbumPhoto!=null){
+            mskImageView.setImageBitmap(lastAlbumPhoto);
+        }
     }
 
     @Override
@@ -206,11 +223,34 @@ public class TakePhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(takenPhoto!=null){
-                    //TODO Implement PhotoAlubm.save(takenPhoto);
+                    saveImageToDisk();
+                    PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
                     startActivity(new Intent(TakePhotoActivity.this, PhotoAlbumOverviewActivity.class));
                 }
             }
         });
+    }
+
+    private void saveImageToDisk() {
+
+        try {
+            File file = new File(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "PhotoProgress" + File.separator ),getImageName());
+            if (file.exists()) {
+                file.delete();
+            }
+
+            FileOutputStream out = new FileOutputStream(file);
+            takenPhoto.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getImageName() {
+
+        return Integer.toString(photoAlbum.getId())+"_"+(new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()))+".jpg";
     }
 
     public void onSeekBarListener(){
@@ -221,9 +261,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                double alpha = seekBar.getProgress() * 2.4;
-                imageView.setAlpha((int) alpha);
-                imageView.setImageAlpha((int) alpha);
+                setImageOpacity(seekBar.getProgress(), imageView);
             }
 
             @Override
@@ -238,25 +276,36 @@ public class TakePhotoActivity extends AppCompatActivity {
         });
     }
 
+    private void setImageOpacity(int progress, ImageView imageView) {
+        double alpha = progress * 2.4;
+        imageView.setAlpha((int) alpha);
+        imageView.setImageAlpha((int) alpha);
+    }
+
     public void onMaskSwitchListener(){
 
         Switch maskSwitch=(Switch)findViewById(R.id.maskSwitch);
+
+        final ImageView maskImageView = (ImageView) findViewById(R.id.maskImgView);
+        final SeekBar seekBar = (SeekBar) findViewById(R.id.maskOpacitySkBr);
+
         maskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ImageView maskImageView = (ImageView) findViewById(R.id.maskImgView);
-                SeekBar seekBar =(SeekBar)findViewById(R.id.maskOpacitySkBr);
-                if(isChecked){
+                if (isChecked) {
                     maskImageView.setVisibility(View.VISIBLE);
                     seekBar.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     maskImageView.setVisibility(View.GONE);
                     seekBar.setVisibility(View.GONE);
                 }
             }
         });
 
-        maskSwitch.setChecked(false);
+        setImageOpacity(photoAlbum.getMaskOpacityLevel(), maskImageView);
+
+        if(!photoAlbum.getIsMaskOn()){
+            maskSwitch.setChecked(false);
+        }
     }
 }
