@@ -1,12 +1,18 @@
 package com.secretproject.photoprogress.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +21,7 @@ import com.secretproject.photoprogress.data.PhotoAlbum;
 import com.secretproject.photoprogress.helpers.NotificationHelper;
 import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
 import com.secretproject.photoprogress.helpers.XmlHelper;
+import com.secretproject.photoprogress.notifications.NotificationReceiver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,29 +38,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         onSaveButtonListener();
         onCancelButtonListener();
-        onEditNotificationButtonListener();
+        onNotificationSwitchListener();
 
         tvNotification = (TextView) findViewById(R.id.tvNotification);
-
-//        PhotoAlbum album = new PhotoAlbum();
-//        ArrayList<PhotoAlbum> settings = new ArrayList<PhotoAlbum>();
-//
-//        album.setId(1);
-//        album.setName("aaa");
-//        album.setDescription("aaa");
-//        album.setNotificationTime(100);
-//
-//        if (album.getName() == ""){
-//
-//        }
-//
-//        settings.add(album);
-//        try {
-//            XmlHelper.saveToXmlFile(settings);
-//        }
-//        catch (Exception e){
-//            System.out.println(e.toString());
-//        }
 
     }
 
@@ -102,11 +89,8 @@ public class SettingsActivity extends AppCompatActivity {
                 album.setId(id + 1);
 
                 if (!notificationTime.getText().toString().isEmpty()) {
-                    String[] hoursAndMinutes = notificationTime.getText().toString().split(":");
-                    int hours = Integer.parseInt(hoursAndMinutes[0].trim());
-                    int minutes = Integer.parseInt(hoursAndMinutes[1].trim());
-
-                    album.setNotificationTime(NotificationHelper.getTimeInMilliseconds(hours, minutes));
+                    album.setNotificationTime(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime());
+                    album.setNotificationInterval(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval());
                 }
 
                 photoAlbums.add(album);
@@ -127,24 +111,36 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    public void onEditNotificationButtonListener(){
-        Button editNotificationBtn=(Button)findViewById(R.id.btnEditNotification);
-        editNotificationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, SetNotificationActivity.class));
-
-            }
-        });
-
-    }
-
     public void onCancelButtonListener(){
         Button cancelBtn=(Button)findViewById(R.id.btnCancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeActivity();
+            }
+        });
+    }
+
+    public void onNotificationSwitchListener(){
+
+        Switch notificationSwitch=(Switch)findViewById(R.id.notificationSwitch);
+
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    startActivity(new Intent(SettingsActivity.this, SetNotificationActivity.class));
+
+                } else {
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                    Intent alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0);
+
+                    alarmManager.cancel(pendingIntent);
+
+                    tvNotification.setText("");
+                }
             }
         });
     }

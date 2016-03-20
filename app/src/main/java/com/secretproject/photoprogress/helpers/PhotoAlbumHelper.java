@@ -24,6 +24,12 @@ public class PhotoAlbumHelper {
 
     public static PhotoAlbum CurrentPhotoAlbum;
 
+    static {
+        if (CurrentPhotoAlbum == null){
+            CurrentPhotoAlbum = new PhotoAlbum();
+        }
+    }
+
     public static Collection<PhotoAlbum> getAllPhotoAlbums(){
 
         if (AllPhotoAlbums != null){
