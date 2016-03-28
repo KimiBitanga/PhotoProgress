@@ -86,9 +86,6 @@ public class SetNotificationActivity extends AppCompatActivity {
 
         notificationTime = NotificationHelper.getTimeInMilliseconds(hours, minutes);
 
-//        Calendar alarmStartTime = Calendar.getInstance();
-//        alarmStartTime.add(Calendar.MINUTE, 1);
-
         //Repeating alarm should be added
 //        alarmManager.setRepeating(AlarmManager.RTC, this.getTimeInMilliseconds(hours, minutes), 86400000, pendingIntent);
         alarmManager.set(AlarmManager.RTC, notificationTime, pendingIntent);

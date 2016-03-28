@@ -21,6 +21,7 @@
     <string name="album_description_label">Album description: </string>
     <string name="show_video_preview_button_content">Show album video</string>
     <string name="make_image_posters_button_content">Make posters from album images</string>
+    <string name="edit_album_button_content">Edit album</string>
     <string name="save_button_content">Save</string>
     <string name="cancel_button_content">Cancel</string>
     <string name="add_notification_button_content">Add notification</string>

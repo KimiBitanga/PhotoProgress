@@ -35,6 +35,7 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         onShowVideoPreviewButtonListener();
         onMakeImagePostersButtonListener();
         onMakeNewPhotoButtonListener();
+        onEditAlbumButtonListener();
 
         photoAlbum = PhotoAlbumHelper.CurrentPhotoAlbum;
         if(photoAlbum == null){
@@ -49,7 +50,7 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
             albumNameTV.setText(photoAlbum.getName());
 
             TextView albumDescriptionTV = (TextView) findViewById(R.id.albumDescriptionTextView);
-            albumDescriptionTV.setText(photoAlbum.getName());
+            albumDescriptionTV.setText(photoAlbum.getDescription());
         }
     }
 
@@ -82,6 +83,19 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
                 PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
 
                 startActivity(new Intent(PhotoAlbumOverviewActivity.this, TakePhotoActivity.class));
+            }
+        });
+    }
+
+    public void onEditAlbumButtonListener(){
+
+        Button editAlbumBtn=(Button)findViewById(R.id.editAlbumBtn);
+        editAlbumBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
+
+                startActivity(new Intent(PhotoAlbumOverviewActivity.this, SettingsActivity.class));
             }
         });
     }

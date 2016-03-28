@@ -76,6 +76,8 @@ public class MainActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        PhotoAlbumHelper.CurrentPhotoAlbum = null;
+
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                     }
                 }
@@ -112,7 +114,7 @@ public class MainActivity extends Activity {
             Log.e("BMTesting", "loadSettingsFromXml", e);
         }
 
-        existingPhotoAlbums = getMockPhotoAlbums();
+        existingPhotoAlbums = PhotoAlbumHelper.getAllPhotoAlbums();
 
         if ( existingPhotoAlbums == null || existingPhotoAlbums.size() == 0){
             RelativeLayout existingAlbumsContainer = (RelativeLayout)findViewById(R.id.existingAlbumsContainerRelativeLayout);

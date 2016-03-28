@@ -30,18 +30,35 @@ import java.util.Collections;
 public class SettingsActivity extends AppCompatActivity {
 
     public static TextView tvNotification;
+    private int id = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        tvNotification = (TextView) findViewById(R.id.tvNotification);
+
+        if (PhotoAlbumHelper.CurrentPhotoAlbum != null){
+            id = PhotoAlbumHelper.CurrentPhotoAlbum.getId();
+
+            EditText etName = (EditText) findViewById(R.id.etName);
+            EditText etDescription = (EditText) findViewById(R.id.etDescription);
+
+            etName.setText(PhotoAlbumHelper.CurrentPhotoAlbum.getName());
+            etDescription.setText(PhotoAlbumHelper.CurrentPhotoAlbum.getDescription());
+
+            if (PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime() != 0){
+                Switch notificationSwitch = (Switch) findViewById(R.id.notificationSwitch);
+
+                notificationSwitch.setChecked(true);
+                tvNotification.setText(NotificationHelper.getTimeFromMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime()));
+            }
+        }
+
         onSaveButtonListener();
         onCancelButtonListener();
         onNotificationSwitchListener();
-
-        tvNotification = (TextView) findViewById(R.id.tvNotification);
-
     }
 
     public void onSaveButtonListener(){
@@ -50,7 +67,13 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                PhotoAlbum album = new PhotoAlbum();
+                PhotoAlbum album = null;
+                if (id >= 0){
+                    album = PhotoAlbumHelper.CurrentPhotoAlbum;
+                }
+                else {
+                    album = new PhotoAlbum();
+                }
 
                 EditText name = (EditText) findViewById(R.id.etName);
                 EditText description = (EditText) findViewById(R.id.etDescription);
@@ -73,37 +96,44 @@ public class SettingsActivity extends AppCompatActivity {
 
 
                 Collection<PhotoAlbum> photoAlbums = PhotoAlbumHelper.getAllPhotoAlbums();
-                int id = -1;
-
-                if (photoAlbums != null && photoAlbums.size() > 0) {
-                    for (PhotoAlbum photoAlbum : photoAlbums) {
-                        if (id < photoAlbum.getId()) {
-                            id = photoAlbum.getId();
-                        }
-                    }
-                }
-                else {
-                    photoAlbums = new ArrayList<PhotoAlbum>();
-                }
-
-                album.setId(id + 1);
 
                 if (!notificationTime.getText().toString().isEmpty()) {
                     album.setNotificationTime(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime());
                     album.setNotificationInterval(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval());
                 }
 
-                photoAlbums.add(album);
+                if (id <= 0) {
+                    int newId = -1;
+                    if (photoAlbums != null && photoAlbums.size() > 0) {
+                        for (PhotoAlbum photoAlbum : photoAlbums) {
+                            if (newId < photoAlbum.getId()) {
+                                newId = photoAlbum.getId();
+                            }
+                        }
+                    } else {
+                        photoAlbums = new ArrayList<PhotoAlbum>();
+                    }
+
+                    album.setId(newId + 1);
+
+                    photoAlbums.add(album);
+
+                    try {
+                        //XmlHelper.saveToXmlFile(settings);
+                        PhotoAlbumHelper.writeAllPhotoAlbums(photoAlbums);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    try {
+                        PhotoAlbumHelper.updatePhotoAlbum(album);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 PhotoAlbumHelper.CurrentPhotoAlbum = album;
-
-                try {
-                    //XmlHelper.saveToXmlFile(settings);
-                    PhotoAlbumHelper.writeAllPhotoAlbums(photoAlbums);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
 
                 startActivity(new Intent(SettingsActivity.this, PhotoAlbumOverviewActivity.class));
             }
