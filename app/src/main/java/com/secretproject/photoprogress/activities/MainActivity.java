@@ -106,20 +106,20 @@ public class MainActivity extends Activity {
     public void fillExistingAlbums(){
 
         try {
-            existingPhotoAlbums = XmlHelper.loadSettingsFromXml();
+            existingPhotoAlbums = PhotoAlbumHelper.getAllPhotoAlbums();
         }
         catch(Exception e){
             Log.e("BMTesting", "loadSettingsFromXml", e);
         }
 
         existingPhotoAlbums = getMockPhotoAlbums();
-
+        //TODO Handle all nullRef exceptions ! If existingPhotoAlbums is null or empty!!!
         if ( existingPhotoAlbums == null || existingPhotoAlbums.size() == 0){
             RelativeLayout existingAlbumsContainer = (RelativeLayout)findViewById(R.id.existingAlbumsContainerRelativeLayout);
             existingAlbumsContainer.setVisibility(View.GONE);
         }
 
-        Bitmap image=BitmapFactory.decodeResource(getResources(), R.drawable.new_x48px);
+        //Bitmap image=BitmapFactory.decodeResource(getResources(), R.drawable.new_x48px);
 
         LinearLayout existingAlbumsLL = (LinearLayout) findViewById(R.id.existingAlbumsLinearLayout);
 
@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
             imageView.setMaxHeight(80);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             //TODO GetLastImageForEveryAlbum
-            imageView.setImageBitmap(image);
+            imageView.setImageBitmap((((ArrayList<PhotoAlbum>) existingPhotoAlbums).get(i).getLastPhoto()));
             rl.addView(imageView);
 
             TextView tv = new TextView(this);

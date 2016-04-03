@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -114,7 +115,16 @@ public class PhotoAlbum implements Serializable {
 
     public Collection<Bitmap> getAlbumPhotos(){
         if (albumPhotos==null){
-            albumPhotos = null;//TODO: GetLastPhoto!!!
+            albumPhotos =  new ArrayList<Bitmap>();
+            File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "PhotoProgress" + File.separator );
+            File files[] = directory.listFiles();
+            File lastPhotoFile=null;
+            for (File f : files) {
+                if(f.getName().startsWith(Integer.toString(getId()) + "_")){
+                    Bitmap photo = BitmapFactory.decodeFile(f.getAbsolutePath());
+                    albumPhotos.add(photo);
+                }
+            }
         }
         return albumPhotos;
     }
