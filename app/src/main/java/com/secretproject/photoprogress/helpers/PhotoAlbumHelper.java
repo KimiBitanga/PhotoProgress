@@ -152,6 +152,9 @@ public class PhotoAlbumHelper {
 
     public static Bitmap getScaledBitmap(Bitmap origianlImage, int outputImgHeigh) {
 
+        if(origianlImage==null)
+            return null;
+
         float aspectRation = (float) origianlImage.getWidth() / origianlImage.getHeight();
         int imgWidth = Math.round(aspectRation * outputImgHeigh);
 
