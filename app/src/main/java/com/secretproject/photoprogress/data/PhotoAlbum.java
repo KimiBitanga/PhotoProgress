@@ -20,6 +20,7 @@ public class PhotoAlbum implements Serializable {
     private String description;
     private long notificationTime;
     private NotificationInterval notificationInterval;
+    private boolean useNotifications;
     private boolean isMaskOn;
     private int maskOpacityLevel;
     private transient Collection<Bitmap> albumPhotos;
@@ -69,6 +70,14 @@ public class PhotoAlbum implements Serializable {
 
     public void setNotificationInterval(NotificationInterval notificationInterval) {
         this.notificationInterval = notificationInterval;
+    }
+
+    public boolean getUseNotifications() {
+        return useNotifications;
+    }
+
+    public void setUseNotifications(boolean useNotifications) {
+        this.useNotifications = useNotifications;
     }
 
     public void setIsMaskOn(boolean isMaskOn){

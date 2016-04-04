@@ -107,74 +107,67 @@ public class MainActivity extends Activity {
 
     public void fillExistingAlbums(){
 
-        try {
-            existingPhotoAlbums = XmlHelper.loadSettingsFromXml();
-        }
-        catch(Exception e){
-            Log.e("BMTesting", "loadSettingsFromXml", e);
-        }
-
         existingPhotoAlbums = PhotoAlbumHelper.getAllPhotoAlbums();
-
-        if ( existingPhotoAlbums == null || existingPhotoAlbums.size() == 0){
-            RelativeLayout existingAlbumsContainer = (RelativeLayout)findViewById(R.id.existingAlbumsContainerRelativeLayout);
-            existingAlbumsContainer.setVisibility(View.GONE);
-        }
 
         Bitmap image=BitmapFactory.decodeResource(getResources(), R.drawable.new_x48px);
 
         LinearLayout existingAlbumsLL = (LinearLayout) findViewById(R.id.existingAlbumsLinearLayout);
 
-        for (int i=0; i< existingPhotoAlbums.size(); i++){
-
-            RelativeLayout rl = new RelativeLayout(this);
-            rl.setId(i);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(3, 3, 3, 3);
-            rl.setLayoutParams(lp);
-
-            rl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(currentlySelectedView != null){
-                        currentlySelectedView.setBackground(getResources().getDrawable(R.drawable.border));
-                    }
-
-                    currentlySelectedView = v;
-                    selectedPhotoAlbum = ((ArrayList<PhotoAlbum>)existingPhotoAlbums).get(v.getId());
-
-
-                    GradientDrawable gd = (GradientDrawable) v.getBackground().mutate();
-                    int width_px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-                    gd.setStroke(width_px, 0xff00ff00);
-                    v.setBackground(gd);
-
-                    if(selectedPhotoAlbum != null){
-                        Button goToAlbumOverviewBtn = (Button) findViewById(R.id.goToAlbumOverviewBtn);
-                        goToAlbumOverviewBtn.setEnabled(true);
-                    }
-                }
-            });
-
-            Drawable backgroundBorder = getResources().getDrawable(R.drawable.border);
-            rl.setBackground(backgroundBorder);
-
-            ImageView imageView = new ImageView(this);
-            imageView.setId(i);
-            imageView.setPadding(2, 2, 2, 2);
-            imageView.setMaxHeight(80);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            //TODO GetLastImageForEveryAlbum
-            imageView.setImageBitmap(image);
-            rl.addView(imageView);
-
-            TextView tv = new TextView(this);
-            tv.setText(((ArrayList<PhotoAlbum>) existingPhotoAlbums).get(i).getName());
-            rl.addView(tv);
-
-            existingAlbumsLL.addView(rl);
+        if ( existingPhotoAlbums == null || existingPhotoAlbums.size() == 0){
+            RelativeLayout existingAlbumsContainer = (RelativeLayout)findViewById(R.id.existingAlbumsContainerRelativeLayout);
+            existingAlbumsContainer.setVisibility(View.GONE);
         }
+        else {
+            for (int i = 0; i < existingPhotoAlbums.size(); i++) {
 
+                RelativeLayout rl = new RelativeLayout(this);
+                rl.setId(i);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(3, 3, 3, 3);
+                rl.setLayoutParams(lp);
+
+                rl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (currentlySelectedView != null) {
+                            currentlySelectedView.setBackground(getResources().getDrawable(R.drawable.border));
+                        }
+
+                        currentlySelectedView = v;
+                        selectedPhotoAlbum = ((ArrayList<PhotoAlbum>) existingPhotoAlbums).get(v.getId());
+
+
+                        GradientDrawable gd = (GradientDrawable) v.getBackground().mutate();
+                        int width_px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
+                        gd.setStroke(width_px, 0xff00ff00);
+                        v.setBackground(gd);
+
+                        if (selectedPhotoAlbum != null) {
+                            Button goToAlbumOverviewBtn = (Button) findViewById(R.id.goToAlbumOverviewBtn);
+                            goToAlbumOverviewBtn.setEnabled(true);
+                        }
+                    }
+                });
+
+                Drawable backgroundBorder = getResources().getDrawable(R.drawable.border);
+                rl.setBackground(backgroundBorder);
+
+                ImageView imageView = new ImageView(this);
+                imageView.setId(i);
+                imageView.setPadding(2, 2, 2, 2);
+                imageView.setMaxHeight(80);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                //TODO GetLastImageForEveryAlbum
+                imageView.setImageBitmap(image);
+                rl.addView(imageView);
+
+                TextView tv = new TextView(this);
+                tv.setText(((ArrayList<PhotoAlbum>) existingPhotoAlbums).get(i).getName());
+                rl.addView(tv);
+
+                existingAlbumsLL.addView(rl);
+            }
+        }
     }
 
 
@@ -191,4 +184,10 @@ public class MainActivity extends Activity {
         return photoAlbums;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        PhotoAlbumHelper.CurrentPhotoAlbum = null;
+    }
 }

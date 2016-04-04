@@ -39,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         tvNotification = (TextView) findViewById(R.id.tvNotification);
 
-        if (PhotoAlbumHelper.CurrentPhotoAlbum != null){
+        if (PhotoAlbumHelper.CurrentPhotoAlbum != null) {
             id = PhotoAlbumHelper.CurrentPhotoAlbum.getId();
 
             EditText etName = (EditText) findViewById(R.id.etName);
@@ -48,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
             etName.setText(PhotoAlbumHelper.CurrentPhotoAlbum.getName());
             etDescription.setText(PhotoAlbumHelper.CurrentPhotoAlbum.getDescription());
 
-            if (PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime() != 0){
+            if (PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime() != 0) {
                 Switch notificationSwitch = (Switch) findViewById(R.id.notificationSwitch);
 
                 notificationSwitch.setChecked(true);
@@ -61,17 +61,16 @@ public class SettingsActivity extends AppCompatActivity {
         onNotificationSwitchListener();
     }
 
-    public void onSaveButtonListener(){
-        Button saveBtn=(Button)findViewById(R.id.btnSave);
+    public void onSaveButtonListener() {
+        Button saveBtn = (Button) findViewById(R.id.btnSave);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 PhotoAlbum album = null;
-                if (id >= 0){
+                if (id >= 0) {
                     album = PhotoAlbumHelper.CurrentPhotoAlbum;
-                }
-                else {
+                } else {
                     album = new PhotoAlbum();
                 }
 
@@ -79,11 +78,10 @@ public class SettingsActivity extends AppCompatActivity {
                 EditText description = (EditText) findViewById(R.id.etDescription);
                 TextView notificationTime = (TextView) findViewById(R.id.tvNotification);
 
-                if (!name.getText().toString().isEmpty() && !description.getText().toString().isEmpty()){
+                if (!name.getText().toString().isEmpty() && !description.getText().toString().isEmpty()) {
                     album.setName(name.getText().toString());
                     album.setDescription(description.getText().toString());
-                }
-                else{
+                } else {
                     Context context = getApplicationContext();
                     CharSequence text = "Enter name and description";
                     int duration = Toast.LENGTH_LONG;
@@ -100,6 +98,11 @@ public class SettingsActivity extends AppCompatActivity {
                 if (!notificationTime.getText().toString().isEmpty()) {
                     album.setNotificationTime(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime());
                     album.setNotificationInterval(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval());
+                    album.setUseNotifications(PhotoAlbumHelper.CurrentPhotoAlbum.getUseNotifications());
+                } else {
+                    album.setNotificationTime(0);
+                    album.setNotificationInterval(null);
+                    album.setUseNotifications(false);
                 }
 
                 if (id <= 0) {
@@ -124,8 +127,7 @@ public class SettingsActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else{
+                } else {
                     try {
                         PhotoAlbumHelper.updatePhotoAlbum(album);
                     } catch (Exception e) {
@@ -141,8 +143,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    public void onCancelButtonListener(){
-        Button cancelBtn=(Button)findViewById(R.id.btnCancel);
+    public void onCancelButtonListener() {
+        Button cancelBtn = (Button) findViewById(R.id.btnCancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,9 +153,9 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    public void onNotificationSwitchListener(){
+    public void onNotificationSwitchListener() {
 
-        Switch notificationSwitch=(Switch)findViewById(R.id.notificationSwitch);
+        Switch notificationSwitch = (Switch) findViewById(R.id.notificationSwitch);
 
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -169,14 +171,40 @@ public class SettingsActivity extends AppCompatActivity {
 
                     alarmManager.cancel(pendingIntent);
 
+                    if (id >= 0) {
+                        PhotoAlbumHelper.CurrentPhotoAlbum.setUseNotifications(false);
+
+                        try {
+                            PhotoAlbumHelper.updatePhotoAlbum(PhotoAlbumHelper.CurrentPhotoAlbum);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     tvNotification.setText("");
                 }
             }
         });
     }
 
-    private void closeActivity(){
+    private void closeActivity() {
         this.finish();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if (PhotoAlbumHelper.CurrentPhotoAlbum != null) {
+            Switch notificationSwitch = (Switch) findViewById(R.id.notificationSwitch);
+
+            if (PhotoAlbumHelper.CurrentPhotoAlbum.getUseNotifications()){
+                notificationSwitch.setChecked(true);
+            }
+            else {
+                notificationSwitch.setChecked(false);
+                tvNotification.setText("");
+            }
+        }
+    }
 }

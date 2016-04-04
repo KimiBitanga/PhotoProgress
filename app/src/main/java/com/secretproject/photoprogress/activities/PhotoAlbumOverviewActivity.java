@@ -100,4 +100,10 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(PhotoAlbumOverviewActivity.this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        return;
+    }
 }

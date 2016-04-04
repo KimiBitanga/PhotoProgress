@@ -29,4 +29,18 @@ public class NotificationHelper {
 
         return ((hours < 10) ? "0" + hours : hours) + ":" + ((minutes < 10) ? "0" + minutes : minutes);
     }
+
+    public static int getHoursFromMilliseconds(long milliseconds){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(milliseconds);
+
+        return cal.getTime().getHours();
+    }
+
+    public static int getMinutesFromMilliseconds(long milliseconds){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(milliseconds);
+
+        return cal.getTime().getMinutes();
+    }
 }

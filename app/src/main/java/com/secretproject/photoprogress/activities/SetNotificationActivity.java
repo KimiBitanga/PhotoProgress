@@ -56,7 +56,10 @@ public class SetNotificationActivity extends AppCompatActivity {
         intervalSpinner.setSelection(2);
 
         if (PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime() > 0){
-            //TODO: set time and interval
+            timePicker.setCurrentHour(NotificationHelper.getHoursFromMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime()));
+            timePicker.setCurrentMinute(NotificationHelper.getMinutesFromMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime()));
+
+            intervalSpinner.setSelection(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval().ordinal());
         }
     }
 
@@ -64,7 +67,8 @@ public class SetNotificationActivity extends AppCompatActivity {
         triggerAlarm();
 
         PhotoAlbumHelper.CurrentPhotoAlbum.setNotificationTime(notificationTime);
-        PhotoAlbumHelper.CurrentPhotoAlbum.setNotificationInterval((NotificationInterval)intervalSpinner.getSelectedItem());
+        PhotoAlbumHelper.CurrentPhotoAlbum.setNotificationInterval((NotificationInterval) intervalSpinner.getSelectedItem());
+        PhotoAlbumHelper.CurrentPhotoAlbum.setUseNotifications(true);
 
         //Close activity
         this.finish();
