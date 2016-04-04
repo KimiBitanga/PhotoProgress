@@ -78,4 +78,16 @@
         android:drawableRight="@drawable/camera_x48px">
     </Button>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_album_button_content"
+        android:id="@+id/editAlbumBtn"
+        android:layout_below="@+id/makeNewPhotoBtn"
+        android:layout_marginTop="25dp"
+        android:layout_alignRight="@+id/makeNewPhotoBtn"
+        android:layout_alignEnd="@+id/makeNewPhotoBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

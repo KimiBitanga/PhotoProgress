@@ -1,5 +1,6 @@
 package com.secretproject.photoprogress.helpers;
 
+import android.graphics.Bitmap;
 import android.os.Environment;
 
 import com.secretproject.photoprogress.data.PhotoAlbum;
@@ -23,6 +24,12 @@ public class PhotoAlbumHelper {
     private static Collection<PhotoAlbum> AllPhotoAlbums;
 
     public static PhotoAlbum CurrentPhotoAlbum;
+
+    static {
+        if (CurrentPhotoAlbum == null){
+            CurrentPhotoAlbum = new PhotoAlbum();
+        }
+    }
 
     public static Collection<PhotoAlbum> getAllPhotoAlbums(){
 
@@ -141,5 +148,13 @@ public class PhotoAlbumHelper {
         }
 
         writeAllPhotoAlbums(photoAlbums);
+    }
+
+    public static Bitmap getScaledBitmap(Bitmap origianlImage, int outputImgHeigh) {
+
+        float aspectRation = (float) origianlImage.getWidth() / origianlImage.getHeight();
+        int imgWidth = Math.round(aspectRation * outputImgHeigh);
+
+        return Bitmap.createScaledBitmap(origianlImage, imgWidth, outputImgHeigh, false);
     }
 }

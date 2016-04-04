@@ -53,9 +53,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvNotification"
-        android:layout_below="@+id/etDescription"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignBottom="@+id/notificationSwitch"
+        android:layout_alignRight="@+id/etDescription"
+        android:layout_alignEnd="@+id/etDescription" />
 
     <Button
         android:layout_width="wrap_content"
@@ -78,12 +78,12 @@
         android:layout_alignParentStart="true"
         />
 
-    <Button
+    <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_notification_button_content"
-        android:id="@+id/btnEditNotification"
-        android:layout_below="@+id/tvNotification"
-        android:layout_alignRight="@+id/etDescription"
-        android:layout_alignEnd="@+id/etDescription" />
+        android:text="Add notification"
+        android:id="@+id/notificationSwitch"
+        android:layout_below="@+id/etDescription"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

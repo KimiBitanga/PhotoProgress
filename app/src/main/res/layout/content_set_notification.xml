@@ -18,9 +18,9 @@
         android:text="@string/buttonSaveNotification_title"
         android:id="@+id/buttonSaveNotification"
         android:onClick="setNotification"
-        android:layout_below="@+id/timePicker"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp" />
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/intervalSpinner"
+        android:layout_centerHorizontal="true" />
 
     <TimePicker
         android:layout_width="wrap_content"
@@ -29,4 +29,23 @@
         android:timePickerMode="spinner"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/intervalSpinner"
+        android:spinnerMode="dropdown"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/buttonSaveNotification"
+        android:layout_alignStart="@+id/buttonSaveNotification" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Repeat"
+        android:id="@+id/tvRepeat"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/timePicker"
+        android:layout_alignStart="@+id/timePicker"
+        android:textColor="#000000" />
 </RelativeLayout>

@@ -1,12 +1,18 @@
 package com.secretproject.photoprogress.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +21,7 @@ import com.secretproject.photoprogress.data.PhotoAlbum;
 import com.secretproject.photoprogress.helpers.NotificationHelper;
 import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
 import com.secretproject.photoprogress.helpers.XmlHelper;
+import com.secretproject.photoprogress.notifications.NotificationReceiver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,38 +30,35 @@ import java.util.Collections;
 public class SettingsActivity extends AppCompatActivity {
 
     public static TextView tvNotification;
+    private int id = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        onSaveButtonListener();
-        onCancelButtonListener();
-        onEditNotificationButtonListener();
-
         tvNotification = (TextView) findViewById(R.id.tvNotification);
 
-//        PhotoAlbum album = new PhotoAlbum();
-//        ArrayList<PhotoAlbum> settings = new ArrayList<PhotoAlbum>();
-//
-//        album.setId(1);
-//        album.setName("aaa");
-//        album.setDescription("aaa");
-//        album.setNotificationTime(100);
-//
-//        if (album.getName() == ""){
-//
-//        }
-//
-//        settings.add(album);
-//        try {
-//            XmlHelper.saveToXmlFile(settings);
-//        }
-//        catch (Exception e){
-//            System.out.println(e.toString());
-//        }
+        if (PhotoAlbumHelper.CurrentPhotoAlbum != null){
+            id = PhotoAlbumHelper.CurrentPhotoAlbum.getId();
 
+            EditText etName = (EditText) findViewById(R.id.etName);
+            EditText etDescription = (EditText) findViewById(R.id.etDescription);
+
+            etName.setText(PhotoAlbumHelper.CurrentPhotoAlbum.getName());
+            etDescription.setText(PhotoAlbumHelper.CurrentPhotoAlbum.getDescription());
+
+            if (PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime() != 0){
+                Switch notificationSwitch = (Switch) findViewById(R.id.notificationSwitch);
+
+                notificationSwitch.setChecked(true);
+                tvNotification.setText(NotificationHelper.getTimeFromMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime()));
+            }
+        }
+
+        onSaveButtonListener();
+        onCancelButtonListener();
+        onNotificationSwitchListener();
     }
 
     public void onSaveButtonListener(){
@@ -63,7 +67,13 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                PhotoAlbum album = new PhotoAlbum();
+                PhotoAlbum album = null;
+                if (id >= 0){
+                    album = PhotoAlbumHelper.CurrentPhotoAlbum;
+                }
+                else {
+                    album = new PhotoAlbum();
+                }
 
                 EditText name = (EditText) findViewById(R.id.etName);
                 EditText description = (EditText) findViewById(R.id.etDescription);
@@ -86,54 +96,46 @@ public class SettingsActivity extends AppCompatActivity {
 
 
                 Collection<PhotoAlbum> photoAlbums = PhotoAlbumHelper.getAllPhotoAlbums();
-                int id = -1;
-
-                if (photoAlbums != null && photoAlbums.size() > 0) {
-                    for (PhotoAlbum photoAlbum : photoAlbums) {
-                        if (id < photoAlbum.getId()) {
-                            id = photoAlbum.getId();
-                        }
-                    }
-                }
-                else {
-                    photoAlbums = new ArrayList<PhotoAlbum>();
-                }
-
-                album.setId(id + 1);
 
                 if (!notificationTime.getText().toString().isEmpty()) {
-                    String[] hoursAndMinutes = notificationTime.getText().toString().split(":");
-                    int hours = Integer.parseInt(hoursAndMinutes[0].trim());
-                    int minutes = Integer.parseInt(hoursAndMinutes[1].trim());
-
-                    album.setNotificationTime(NotificationHelper.getTimeInMilliseconds(hours, minutes));
+                    album.setNotificationTime(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime());
+                    album.setNotificationInterval(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval());
                 }
 
-                photoAlbums.add(album);
+                if (id <= 0) {
+                    int newId = -1;
+                    if (photoAlbums != null && photoAlbums.size() > 0) {
+                        for (PhotoAlbum photoAlbum : photoAlbums) {
+                            if (newId < photoAlbum.getId()) {
+                                newId = photoAlbum.getId();
+                            }
+                        }
+                    } else {
+                        photoAlbums = new ArrayList<PhotoAlbum>();
+                    }
+
+                    album.setId(newId + 1);
+
+                    photoAlbums.add(album);
+
+                    try {
+                        //XmlHelper.saveToXmlFile(settings);
+                        PhotoAlbumHelper.writeAllPhotoAlbums(photoAlbums);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    try {
+                        PhotoAlbumHelper.updatePhotoAlbum(album);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 PhotoAlbumHelper.CurrentPhotoAlbum = album;
 
-                try {
-                    //XmlHelper.saveToXmlFile(settings);
-                    PhotoAlbumHelper.writeAllPhotoAlbums(photoAlbums);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
                 startActivity(new Intent(SettingsActivity.this, PhotoAlbumOverviewActivity.class));
-            }
-        });
-
-    }
-
-    public void onEditNotificationButtonListener(){
-        Button editNotificationBtn=(Button)findViewById(R.id.btnEditNotification);
-        editNotificationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, SetNotificationActivity.class));
-
             }
         });
 
@@ -145,6 +147,30 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 closeActivity();
+            }
+        });
+    }
+
+    public void onNotificationSwitchListener(){
+
+        Switch notificationSwitch=(Switch)findViewById(R.id.notificationSwitch);
+
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    startActivity(new Intent(SettingsActivity.this, SetNotificationActivity.class));
+
+                } else {
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                    Intent alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0);
+
+                    alarmManager.cancel(pendingIntent);
+
+                    tvNotification.setText("");
+                }
             }
         });
     }

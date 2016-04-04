@@ -19,4 +19,14 @@ public class NotificationHelper {
 
         return totalMilliseconds;
     }
+
+    public static String getTimeFromMilliseconds(long milliseconds){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(milliseconds);
+
+        int hours = cal.getTime().getHours();
+        int minutes = cal.getTime().getMinutes();
+
+        return ((hours < 10) ? "0" + hours : hours) + ":" + ((minutes < 10) ? "0" + minutes : minutes);
+    }
 }
