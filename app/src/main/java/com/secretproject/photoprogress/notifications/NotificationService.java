@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.secretproject.photoprogress.R;
 import com.secretproject.photoprogress.activities.MainActivity;
+import com.secretproject.photoprogress.activities.TakePhotoActivity;
+import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
 
 /**
  * Created by milan.curcic on 5.3.2016..
@@ -44,12 +46,9 @@ public class NotificationService extends IntentService
         notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Change this to photo activity
-        Intent mIntent = new Intent(this, MainActivity.class);
+        Intent mIntent = new Intent(this, TakePhotoActivity.class);
 
-        //Check this
-        Bundle bundle = new Bundle();
-        bundle.putString("test", "test");
-        mIntent.putExtras(bundle);
+        mIntent.putExtra("id", PhotoAlbumHelper.CurrentPhotoAlbum.getId());
 
         pendingIntent = PendingIntent.getActivity(context, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

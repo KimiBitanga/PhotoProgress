@@ -58,6 +58,13 @@ public class TakePhotoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            int id = extras.getInt("id");
+
+            PhotoAlbumHelper.CurrentPhotoAlbum = PhotoAlbumHelper.getPhotoAlbum(id);
+        }
+
         photoAlbum = PhotoAlbumHelper.CurrentPhotoAlbum;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
