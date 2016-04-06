@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,12 +8,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.secretproject.photoprogress.activities.MainActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
     <!--tools:showIn="@layout/activity_photo_album_overview"-->
-
-
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,24 +27,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/create_new_album_button_content"
-        android:layout_below="@+id/appDescriptionTxtView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:drawableRight="@drawable/new_x48px">
     </Button>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginTop="15dp"
-        android:id="@+id/existingAlbumsContainerRelativeLayout"
-        android:layout_below="@+id/createNewAlbumBtn">
+        android:id="@+id/existingAlbumsContainerLinearLayout"
+        android:orientation="vertical">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/existingAlbumsHorizontalSV"
             android:scrollbars="none"
+            android:layout_weight="1"
             android:layout_centerHorizontal="true">
 
             <LinearLayout
@@ -62,9 +60,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/selectAlbumHelpTextView"
-            android:layout_below="@+id/existingAlbumsHorizontalSV"
             android:text="@string/select_album_helping_text">
         </TextView>
 
@@ -73,15 +70,12 @@
             android:layout_height="wrap_content"
             android:text="@string/go_to_album_overview_button_content"
             android:id="@+id/goToAlbumOverviewBtn"
-            android:layout_below="@+id/selectAlbumHelpTextView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_marginTop="15dp"
             android:drawableRight="@drawable/ok_mark_x48px"
             android:enabled="false"
             >
         </Button>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
