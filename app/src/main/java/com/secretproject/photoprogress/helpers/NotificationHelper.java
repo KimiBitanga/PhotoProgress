@@ -48,13 +48,13 @@ public class NotificationHelper {
 
     public static long getNotificationIntervalInMilliseconds(NotificationInterval interval){
         switch (interval) {
-            case HOURLY: return 360000;
-            case EVERY_OTHER_HOUR: return 720000;
-            case DAILY: return 8640000;
-            case EVERY_OTHER_DAY: return 17280000;
-            case WEEKLY: return 60480000;
-            case EVERY_OTHER_WEEK: return 120960000;
-            case EVERY_FOUR_WEEKS: return 241920000;
+            case HOURLY: return 3600000;
+            case EVERY_OTHER_HOUR: return 7200000;
+            case DAILY: return 86400000;
+            case EVERY_OTHER_DAY: return 172800000;
+            case WEEKLY: return 604800000;
+            case EVERY_OTHER_WEEK: return 1209600000;
+            case EVERY_FOUR_WEEKS: return 2419200000l;
             default: return 0;
         }
     }
