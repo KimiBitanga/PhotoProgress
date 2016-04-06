@@ -1,5 +1,7 @@
 package com.secretproject.photoprogress.helpers;
 
+import com.secretproject.photoprogress.data.NotificationInterval;
+
 import java.util.Calendar;
 
 /**
@@ -42,5 +44,18 @@ public class NotificationHelper {
         cal.setTimeInMillis(milliseconds);
 
         return cal.getTime().getMinutes();
+    }
+
+    public static long getNotificationIntervalInMilliseconds(NotificationInterval interval){
+        switch (interval) {
+            case HOURLY: return 360000;
+            case EVERY_OTHER_HOUR: return 720000;
+            case DAILY: return 8640000;
+            case EVERY_OTHER_DAY: return 17280000;
+            case WEEKLY: return 60480000;
+            case EVERY_OTHER_WEEK: return 120960000;
+            case EVERY_FOUR_WEEKS: return 241920000;
+            default: return 0;
+        }
     }
 }

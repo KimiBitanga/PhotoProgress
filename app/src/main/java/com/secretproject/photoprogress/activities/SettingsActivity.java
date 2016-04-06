@@ -55,6 +55,10 @@ public class SettingsActivity extends AppCompatActivity {
                 tvNotification.setText(NotificationHelper.getTimeFromMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime()));
             }
         }
+        else{
+            PhotoAlbumHelper.CurrentPhotoAlbum = new PhotoAlbum();
+            PhotoAlbumHelper.CurrentPhotoAlbum.setId(-1);
+        }
 
         onSaveButtonListener();
         onCancelButtonListener();

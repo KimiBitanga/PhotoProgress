@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
 import java.util.Calendar;
 
 import com.secretproject.photoprogress.R;
@@ -89,10 +91,20 @@ public class SetNotificationActivity extends AppCompatActivity {
         SettingsActivity.tvNotification.setText(hours + ":" + ((minutes > 9) ? minutes : "0" + minutes));
 
         notificationTime = NotificationHelper.getTimeInMilliseconds(hours, minutes);
+        long interval = NotificationHelper.getNotificationIntervalInMilliseconds((NotificationInterval) intervalSpinner.getSelectedItem());
 
-        //Repeating alarm should be added
-//        alarmManager.setRepeating(AlarmManager.RTC, this.getTimeInMilliseconds(hours, minutes), 86400000, pendingIntent);
-        alarmManager.set(AlarmManager.RTC, notificationTime, pendingIntent);
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_LONG;
 
+        if (interval > 0){
+            alarmManager.setRepeating(AlarmManager.RTC, notificationTime, interval, pendingIntent);
+
+            Toast toast = Toast.makeText(context, "Notification added.", duration);
+            toast.show();
+        }
+        else{
+            Toast toast = Toast.makeText(context, "Error occurred while setting notification!", duration);
+            toast.show();
+        }
     }
 }
