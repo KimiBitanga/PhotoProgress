@@ -27,10 +27,6 @@ import com.secretproject.photoprogress.notifications.NotificationReceiver;
 
 public class SetNotificationActivity extends AppCompatActivity {
 
-    public AlarmManager alarmManager;
-    Intent alarmIntent;
-    PendingIntent pendingIntent;
-    int mNotificationCount;
     long notificationTime;
     Spinner intervalSpinner;
 
@@ -66,7 +62,15 @@ public class SetNotificationActivity extends AppCompatActivity {
     }
 
     public void setNotification(View v){
-        triggerAlarm();
+        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+        timePicker.clearFocus();
+
+        int hours = timePicker.getCurrentHour();
+        int minutes  = timePicker.getCurrentMinute();
+
+        notificationTime = NotificationHelper.getTimeInMilliseconds(hours, minutes);
+
+        SettingsActivity.tvNotification.setText(hours + ":" + ((minutes > 9) ? minutes : "0" + minutes));
 
         PhotoAlbumHelper.CurrentPhotoAlbum.setNotificationTime(notificationTime);
         PhotoAlbumHelper.CurrentPhotoAlbum.setNotificationInterval((NotificationInterval) intervalSpinner.getSelectedItem());
@@ -74,37 +78,5 @@ public class SetNotificationActivity extends AppCompatActivity {
 
         //Close activity
         this.finish();
-    }
-
-    public void triggerAlarm(){
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0);
-
-        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-        timePicker.clearFocus();
-
-        int hours = timePicker.getCurrentHour();
-        int minutes  = timePicker.getCurrentMinute();
-
-        SettingsActivity.tvNotification.setText(hours + ":" + ((minutes > 9) ? minutes : "0" + minutes));
-
-        notificationTime = NotificationHelper.getTimeInMilliseconds(hours, minutes);
-        long interval = NotificationHelper.getNotificationIntervalInMilliseconds((NotificationInterval) intervalSpinner.getSelectedItem());
-
-        Context context = getApplicationContext();
-        int duration = Toast.LENGTH_LONG;
-
-        if (interval > 0){
-            alarmManager.setRepeating(AlarmManager.RTC, notificationTime, interval, pendingIntent);
-
-            Toast toast = Toast.makeText(context, "Notification added.", duration);
-            toast.show();
-        }
-        else{
-            Toast toast = Toast.makeText(context, "Error occurred while setting notification!", duration);
-            toast.show();
-        }
     }
 }

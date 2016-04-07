@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.secretproject.photoprogress.R;
+import com.secretproject.photoprogress.data.NotificationInterval;
 import com.secretproject.photoprogress.data.PhotoAlbum;
 import com.secretproject.photoprogress.helpers.NotificationHelper;
 import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
@@ -31,6 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static TextView tvNotification;
     private int id = -1;
+
+    public AlarmManager alarmManager;
+    Intent alarmIntent;
+    PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
                     album.setUseNotifications(false);
                 }
 
-                if (id <= 0) {
+                if (id < 0) {
                     int newId = -1;
                     if (photoAlbums != null && photoAlbums.size() > 0) {
                         for (PhotoAlbum photoAlbum : photoAlbums) {
@@ -140,6 +145,8 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
                 PhotoAlbumHelper.CurrentPhotoAlbum = album;
+
+                triggerAlarm();
 
                 startActivity(new Intent(SettingsActivity.this, PhotoAlbumOverviewActivity.class));
             }
@@ -189,6 +196,26 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void triggerAlarm(){
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), PhotoAlbumHelper.CurrentPhotoAlbum.getId(), alarmIntent, 0);
+
+        long notificationTime = PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime();
+        long interval = NotificationHelper.getNotificationIntervalInMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval());
+
+        if (interval > 0){
+            alarmManager.setRepeating(AlarmManager.RTC, notificationTime, interval, pendingIntent);
+        }
+        else{
+            Context context = getApplicationContext();
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(context, "Error occurred while setting notification!", duration);
+            toast.show();
+        }
     }
 
     private void closeActivity() {
