@@ -33,10 +33,6 @@ public class SettingsActivity extends AppCompatActivity {
     public static TextView tvNotification;
     private int id = -1;
 
-    public AlarmManager alarmManager;
-    Intent alarmIntent;
-    PendingIntent pendingIntent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,7 +174,7 @@ public class SettingsActivity extends AppCompatActivity {
                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
                     Intent alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), PhotoAlbumHelper.CurrentPhotoAlbum.getId(), alarmIntent, 0);
 
                     alarmManager.cancel(pendingIntent);
 
@@ -199,10 +195,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void triggerAlarm(){
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), PhotoAlbumHelper.CurrentPhotoAlbum.getId(), alarmIntent, 0);
+        Intent alarmIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), PhotoAlbumHelper.CurrentPhotoAlbum.getId(), alarmIntent, 0);
 
         long notificationTime = PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationTime();
         long interval = NotificationHelper.getNotificationIntervalInMilliseconds(PhotoAlbumHelper.CurrentPhotoAlbum.getNotificationInterval());
