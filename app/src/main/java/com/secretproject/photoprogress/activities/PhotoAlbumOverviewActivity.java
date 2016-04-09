@@ -1,5 +1,7 @@
 package com.secretproject.photoprogress.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +38,7 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         onMakeImagePostersButtonListener();
         onMakeNewPhotoButtonListener();
         onEditAlbumButtonListener();
+        onDeleteAlbumButtonListener();
 
         photoAlbum = PhotoAlbumHelper.CurrentPhotoAlbum;
         if(photoAlbum == null){
@@ -101,6 +104,41 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         });
     }
 
+    public void onDeleteAlbumButtonListener(){
+        Button deleteAlbumBtn=(Button)findViewById(R.id.deleteAlbumBtn);
+        deleteAlbumBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //This code needs to bre extracted to helper method because popup will be used in several situations !
+                AlertDialog.Builder builder = new AlertDialog.Builder(PhotoAlbumOverviewActivity.this);
+                builder.setMessage("Delete of album will delete all it's photos. Are you sure you want to delete album?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                try {
+                                    PhotoAlbumHelper.deletePhotoAlbum(photoAlbum);
+
+                                    PhotoAlbumHelper.CurrentPhotoAlbum = null;
+                                    startActivity(new Intent(PhotoAlbumOverviewActivity.this, MainActivity.class));
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
         startActivity(new Intent(PhotoAlbumOverviewActivity.this, MainActivity.class)

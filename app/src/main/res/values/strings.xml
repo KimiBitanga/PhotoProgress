@@ -27,6 +27,7 @@
     <string name="add_notification_button_content">Add notification</string>
     <string name="edit_notification_button_content">Edit notification</string>
     <string name="title_activity_album_video">AlbumVideoActivity</string>
+    <string name="delete_album_button_content">Delete album</string>
 </resources>
 
 

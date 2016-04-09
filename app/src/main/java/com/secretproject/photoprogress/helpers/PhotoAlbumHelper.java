@@ -135,6 +135,9 @@ public class PhotoAlbumHelper {
 
     public static void deletePhotoAlbum(PhotoAlbum photoAlbum)throws Exception{
 
+        if(photoAlbum==null)
+            return;
+
         Collection<PhotoAlbum> photoAlbums = getAllPhotoAlbums();
 
         for (PhotoAlbum albumInList : photoAlbums){
@@ -144,10 +147,23 @@ public class PhotoAlbumHelper {
                 if (!success){
                     throw new Exception("Throw better exception!!!");
                 }
+
+                deleteAlbumPhotos(photoAlbum.getId());
             }
         }
 
         writeAllPhotoAlbums(photoAlbums);
+    }
+
+    private static void deleteAlbumPhotos(int id) {
+
+        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "PhotoProgress" + File.separator );
+        File files[] = directory.listFiles();
+        for (File f : files) {
+            if(f.getName().startsWith(Integer.toString(id) + "_")){
+                f.delete();
+            }
+        }
     }
 
     public static Bitmap getScaledBitmap(Bitmap origianlImage, int outputImgHeigh) {

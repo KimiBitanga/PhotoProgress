@@ -90,4 +90,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_album_button_content"
+        android:id="@+id/deleteAlbumBtn"
+        android:layout_below="@+id/editAlbumBtn"
+        android:layout_marginTop="25dp"
+        android:layout_alignRight="@+id/editAlbumBtn"
+        android:layout_alignEnd="@+id/editAlbumBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
