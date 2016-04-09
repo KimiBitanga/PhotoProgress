@@ -26,6 +26,7 @@
     <string name="cancel_button_content">Cancel</string>
     <string name="add_notification_button_content">Add notification</string>
     <string name="edit_notification_button_content">Edit notification</string>
+    <string name="title_activity_album_video">AlbumVideoActivity</string>
 </resources>
 
 

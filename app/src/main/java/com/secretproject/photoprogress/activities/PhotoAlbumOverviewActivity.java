@@ -59,7 +59,8 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         showVideoPreviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
+                startActivity(new Intent(PhotoAlbumOverviewActivity.this, AlbumVideoActivity.class));
             }
         });
     }
