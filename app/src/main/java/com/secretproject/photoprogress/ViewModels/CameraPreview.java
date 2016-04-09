@@ -41,8 +41,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
-        this.camera=camera;
-        this.cameraInfo=cameraInfo;
+        this.camera = camera;
+        this.cameraInfo = cameraInfo;
         if(!isSurfaceCreated){
             return;
         }
@@ -58,8 +58,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        isSurfaceCreated=true;
-        if(camera!=null){
+        isSurfaceCreated = true;
+        if(camera != null){
             setCamera(camera, cameraInfo);
         }
     }
@@ -67,6 +67,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
+        Toast.makeText(_activity, "surfaceChanged ", Toast.LENGTH_SHORT).show();
         // stop preview before making changes
 //        try {
 //            camera.stopPreview();
@@ -98,7 +99,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        if(camera==null || surfaceHolder.getSurface()==null){
+        if(camera == null || surfaceHolder.getSurface() == null){
             return;
         }
 
@@ -135,38 +136,29 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         Camera.Size targetPreviewSize = getClosestSize(getWidth(), getHeight(), parameters.getSupportedPreviewSizes());
         parameters.setPreviewSize(targetPreviewSize.width, targetPreviewSize.height);
 
-        _previewWidth = targetPreviewSize.width;
-        _previewHeight =  targetPreviewSize.height;
-
-        Toast.makeText(_activity, Integer.toString(targetPreviewSize.width) +  " " + Integer.toString(targetPreviewSize.height), Toast.LENGTH_SHORT).show();
-
-        Camera.Size targetImageSize = getClosestSize(1024, 1280, parameters.getSupportedPictureSizes());
-
-        Toast.makeText(_activity, "picture " + Integer.toString(targetImageSize.width) +  " " + Integer.toString(targetImageSize.height), Toast.LENGTH_SHORT).show();
+        Camera.Size targetImageSize = getClosestSize(targetPreviewSize.width, targetPreviewSize.height, parameters.getSupportedPictureSizes());
         parameters.setPictureSize(targetImageSize.width, targetImageSize.height);
-        //parameters.setPictureSize(targetPreviewSize.width, targetPreviewSize.height);
 
         camera.setDisplayOrientation(90);
 
         _activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-
         camera.setParameters(parameters);
     }
 
     private Camera.Size getClosestSize(int width, int height, List<Camera.Size> supportedSizes) {
 
-        final double ASPECT_TLERANCE =.1;
+        final double ASPECT_TOLERANCE =.1;
         double targetRation = (double)height/width;
 
         Camera.Size targetSize = null;
         double minDifference = Double.MAX_VALUE;
 
         for ( Camera.Size size: supportedSizes){
-            double ration=(double) size.width/size.height;
-            if(Math.abs(ration - targetRation)>ASPECT_TLERANCE){
+            double ration = (double) size.width/size.height;
+            if(Math.abs(ration - targetRation) > ASPECT_TOLERANCE){
                 continue;
             }
-            int heightDifference =Math.abs(size.height   -height);
+            int heightDifference = Math.abs(size.height - height);
             if(heightDifference < minDifference){
                 targetSize = size;
                 minDifference = heightDifference;
@@ -177,7 +169,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             minDifference = Double.MAX_VALUE;
             for (Camera.Size size: supportedSizes){
                 int heightDifference = Math.abs(size.height - height);
-                if(heightDifference <minDifference){
+                if(heightDifference < minDifference){
                     targetSize = size;
                     minDifference = heightDifference;
                 }
