@@ -17,10 +17,7 @@ import java.util.Collection;
 
 public class MainActivity extends Activity {
 
-    private PhotoAlbum selectedPhotoAlbum;
-    private Collection<PhotoAlbum> existingPhotoAlbums;
     private AlbumAdapter albumAdapter;
-    public static PhotoAlbumHelper photoAlbumHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
