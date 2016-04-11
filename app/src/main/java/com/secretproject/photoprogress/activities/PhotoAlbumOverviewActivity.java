@@ -73,7 +73,9 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         makeImagePostersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
 
+                startActivity(new Intent(PhotoAlbumOverviewActivity.this, PosterActivity.class));
             }
         });
     }

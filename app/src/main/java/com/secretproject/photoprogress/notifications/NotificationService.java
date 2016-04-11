@@ -50,7 +50,7 @@ public class NotificationService extends IntentService
 
         mIntent.putExtra("id", PhotoAlbumHelper.CurrentPhotoAlbum.getId());
 
-        pendingIntent = PendingIntent.getActivity(context, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(context, 0, mIntent, 0);
 
         Resources res = this.getResources();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);

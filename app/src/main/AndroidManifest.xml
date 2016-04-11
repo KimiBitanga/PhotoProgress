@@ -46,7 +46,11 @@
         <activity
             android:name=".activities.AlbumVideoActivity"
             android:label="@string/title_activity_album_video"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.PosterActivity"
+            android:label="@string/title_activity_poster"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

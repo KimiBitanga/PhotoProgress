@@ -28,6 +28,7 @@
     <string name="edit_notification_button_content">Edit notification</string>
     <string name="title_activity_album_video">AlbumVideoActivity</string>
     <string name="delete_album_button_content">Delete album</string>
+    <string name="title_activity_poster">PosterActivity</string>
 </resources>
 
 
