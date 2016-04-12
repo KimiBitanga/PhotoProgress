@@ -4,35 +4,35 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.secretproject.photoprogress.R;
-import com.secretproject.photoprogress.activities.TakePhotoActivity;
+import com.secretproject.photoprogress.adapters.PhotosHorizontalListAdapter;
 import com.secretproject.photoprogress.data.PhotoAlbum;
 import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
 
-import org.w3c.dom.Text;
+import org.lucasr.twowayview.TwoWayView;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class PhotoAlbumOverviewActivity extends AppCompatActivity {
 
     private PhotoAlbum photoAlbum;
+    private PhotosHorizontalListAdapter photosHorizontalListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_album_overview);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        if(photoAlbum!=null) {
-//            Toast.makeText(this, photoAlbum.getName(), Toast.LENGTH_SHORT).show();
-//        }
 
         onShowVideoPreviewButtonListener();
         onMakeImagePostersButtonListener();
@@ -45,6 +45,50 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
             //Every activity should have id of photoAlbum in case that android delete static variable to get instance from the file.
         }
         setAlbumDataToLayout();
+
+        initializePhotosListView();
+    }
+
+
+
+    private void initializePhotosListView() {
+
+        ArrayList<File> albums=new ArrayList<File>();
+        photosHorizontalListAdapter = new PhotosHorizontalListAdapter(this, albums);
+        TwoWayView photosmTwoWayView = (TwoWayView)findViewById(R.id.photosTwoWayView);
+        photosmTwoWayView.setAdapter(photosHorizontalListAdapter);
+        photosmTwoWayView.setOnItemClickListener(new  AdapterView.OnItemClickListener() {
+             @Override
+             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+             }
+         });
+
+        photosmTwoWayView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                PopupMenu photoPopupMenu = new PopupMenu(PhotoAlbumOverviewActivity.this, view);
+                photoPopupMenu.inflate(R.menu.photo_menu);
+                photoPopupMenu.show();
+
+                final File selectedPhoto = (File) parent.getItemAtPosition(position);
+
+                photoPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getItemId()==R.id.action_item_delete)
+                        {
+                            selectedPhoto.delete();
+                            refreshPhotosListView();
+                        }
+                        return false;
+                    }
+                });
+
+                return false;
+            }
+        });
     }
 
     private void setAlbumDataToLayout() {
@@ -146,5 +190,21 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         startActivity(new Intent(PhotoAlbumOverviewActivity.this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         return;
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        refreshPhotosListView();
+    }
+
+    private void refreshPhotosListView() {
+
+        ArrayList<File> albumPhotos = PhotoAlbumHelper.getAllAlbumPhotos(PhotoAlbumHelper.CurrentPhotoAlbum.getId());
+
+        photosHorizontalListAdapter.clear();
+        photosHorizontalListAdapter.addAll(albumPhotos);
+        photosHorizontalListAdapter.notifyDataSetChanged();
     }
 }

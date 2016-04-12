@@ -3,15 +3,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_margin="10dp"
     android:layout_gravity="center_vertical"
     android:background="@drawable/border"
-    android:id="@+id/albumLinearLayout"
     >
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/albumImageIV"
+        android:id="@+id/photoIV"
         android:layout_gravity="center_horizontal"
         android:padding="2dp">
     </ImageView>
@@ -19,18 +18,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/albumNameTV"
-        android:layout_gravity="center_horizontal"
-        android:textStyle="bold">
-    </TextView>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/albumDescriptionTV"
+        android:id="@+id/photo_creation_date_TV"
         android:layout_gravity="center_horizontal"
         android:textStyle="italic">
-
     </TextView>
 
 </LinearLayout>

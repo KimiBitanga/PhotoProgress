@@ -42,13 +42,43 @@
         android:editable="false">
     </TextView>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/albumDescriptionTextViewLabel"
+        android:id="@+id/photosScrollView"
+        >
+    <org.lucasr.twowayview.TwoWayView
+        android:id="@+id/photosTwoWayView"
+        style="@style/HorizontalListView"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:drawSelectorOnTop="false"/>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/makeNewPhotoBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/make_new_photo_button_content"
+        android:layout_below="@+id/photosScrollView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:drawableRight="@drawable/camera_x48px">
+    </Button>
+
     <Button
         android:id="@+id/showVideoPreviewBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/show_video_preview_button_content"
-        android:layout_below="@+id/albumDescriptionTextViewLabel"
+        android:layout_below="@+id/makeNewPhotoBtn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:drawableRight="@drawable/movie_x48px">
@@ -66,24 +96,14 @@
         android:drawableRight="@drawable/images_x48px">
     </Button>
 
-    <Button
-        android:id="@+id/makeNewPhotoBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="@string/make_new_photo_button_content"
-        android:layout_below="@+id/makeImagePostersBtn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:drawableRight="@drawable/camera_x48px">
-    </Button>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_album_button_content"
         android:id="@+id/editAlbumBtn"
-        android:layout_below="@+id/makeNewPhotoBtn"
+        android:layout_below="@+id/makeImagePostersBtn"
         android:layout_marginTop="25dp"
         android:layout_alignRight="@+id/makeNewPhotoBtn"
         android:layout_alignEnd="@+id/makeNewPhotoBtn"

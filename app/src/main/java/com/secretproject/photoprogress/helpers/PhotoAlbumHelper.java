@@ -14,7 +14,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by BO on 14-Mar-16.
@@ -22,6 +26,8 @@ import java.util.Collection;
 public class PhotoAlbumHelper {
 
     private static Collection<PhotoAlbum> AllPhotoAlbums;
+
+    private static String folderName = "PhotoProgress";
 
     public static PhotoAlbum CurrentPhotoAlbum;
 
@@ -79,7 +85,7 @@ public class PhotoAlbumHelper {
     public static void writeAllPhotoAlbums(Collection<PhotoAlbum> photoAlbums){
 
         String fileName = "Settings.srl";
-        String folderName = "PhotoProgress";
+
         ObjectOutput out = null;
 
         File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + folderName);
@@ -155,15 +161,38 @@ public class PhotoAlbumHelper {
         writeAllPhotoAlbums(photoAlbums);
     }
 
-    private static void deleteAlbumPhotos(int id) {
+    private static void deleteAlbumPhotos(int albumId) {
 
-        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "PhotoProgress" + File.separator );
+        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + folderName + File.separator );
         File files[] = directory.listFiles();
         for (File f : files) {
-            if(f.getName().startsWith(Integer.toString(id) + "_")){
+            if(f.getName().startsWith(Integer.toString(albumId) + "_")){
                 f.delete();
             }
         }
+    }
+
+    public static ArrayList<File> getAllAlbumPhotos(int albumId){
+        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + folderName + File.separator );
+        File files[] = directory.listFiles();
+
+
+        ArrayList<File> albumPhotos = new ArrayList<File>();
+        for (File f : files) {
+            if(f.getName().startsWith(Integer.toString(albumId) + "_")){
+                albumPhotos.add(f);
+            }
+        }
+
+        Collections.sort(albumPhotos, new Comparator<File>() {
+            @Override
+            public int compare(File file2, File file1)
+            {
+                return new Date(file2.lastModified()).compareTo(new Date(file1.lastModified()));
+            }
+        });
+
+        return albumPhotos;
     }
 
     public static Bitmap getScaledBitmap(Bitmap origianlImage, int outputImgHeigh) {

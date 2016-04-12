@@ -29,6 +29,7 @@
     <string name="title_activity_album_video">AlbumVideoActivity</string>
     <string name="delete_album_button_content">Delete album</string>
     <string name="title_activity_poster">PosterActivity</string>
+    <string name="delete_photo_menu_item_title">Delete photo</string>
 </resources>
 
 
