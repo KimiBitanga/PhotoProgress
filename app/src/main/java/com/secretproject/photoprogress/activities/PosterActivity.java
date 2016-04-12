@@ -2,6 +2,7 @@ package com.secretproject.photoprogress.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
@@ -79,9 +80,9 @@ public class PosterActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 int imagesInRow = position + 1;
-                int imagesInColumn = images.size()/imagesInRow;
+                int imagesInColumn = images.size() / imagesInRow;
 
-                if (images.size()%imagesInRow != 0){
+                if (images.size() % imagesInRow != 0) {
                     imagesInColumn++;
                 }
 
@@ -122,11 +123,16 @@ public class PosterActivity extends AppCompatActivity {
     }
 
     private void setPoster(ArrayList<Bitmap> images, int imagesInRow, int imagesInColumn){
-        Bitmap result = Bitmap.createBitmap(images.get(0).getWidth() * imagesInRow, images.get(0).getHeight() * imagesInColumn, Bitmap.Config.ARGB_8888);
+        if (resultImage != null) {
+            resultImage.recycle();
+            resultImage = null;
+        }
+        Bitmap result = Bitmap.createBitmap((images.get(0).getWidth() + 40) * imagesInRow, (images.get(0).getHeight() + 40) * imagesInColumn, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
         for (int i = 0; i < images.size(); i++) {
-            canvas.drawBitmap(images.get(i), images.get(i).getWidth() * (i % imagesInRow), images.get(i).getHeight() * (i / imagesInRow), paint);
+            Bitmap currentImage = addWhiteBorder(images.get(i), 20);
+            canvas.drawBitmap(currentImage, currentImage.getWidth() * (i % imagesInRow), currentImage.getHeight() * (i / imagesInRow), paint);
         }
 
         ImageView posterView = (ImageView) findViewById(R.id.imgViewPoster);
@@ -136,15 +142,24 @@ public class PosterActivity extends AppCompatActivity {
 
         int width = dm.widthPixels;
 
-        posterView.setImageBitmap(PhotoAlbumHelper.getScaledBitmap(result, width / 2));
+        Bitmap scaledImage = PhotoAlbumHelper.getScaledBitmap(result, width / 2);
 
-        if (resultImage == null)
-            resultImage = result;
+        posterView.setImageBitmap(scaledImage);
+
+        resultImage = result;
     }
 
     private String getImageName() {
 
         return "Poster_" + Integer.toString(PhotoAlbumHelper.CurrentPhotoAlbum.getId()) + "_" + (new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date())) + ".jpg";
+    }
+
+    private Bitmap addWhiteBorder(Bitmap bmp, int borderSize) {
+        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + borderSize * 2, bmp.getHeight() + borderSize * 2, bmp.getConfig());
+        Canvas canvas = new Canvas(bmpWithBorder);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawBitmap(bmp, borderSize, borderSize, null);
+        return bmpWithBorder;
     }
 
     private void closeActivity() {
