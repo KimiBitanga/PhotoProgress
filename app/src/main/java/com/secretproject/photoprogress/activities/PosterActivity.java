@@ -53,7 +53,7 @@ public class PosterActivity extends AppCompatActivity {
 
         Spinner columnsSpinner = (Spinner) findViewById(R.id.columnsSpinner);
 
-        Integer[] items = new Integer[]{1,2,3,4,5,6,7,8,9,10};
+        Integer[] items = new Integer[]{1,2,3,4,5,6,7,8};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, items);
         columnsSpinner.setAdapter(adapter);
 
@@ -127,11 +127,28 @@ public class PosterActivity extends AppCompatActivity {
             resultImage.recycle();
             resultImage = null;
         }
-        Bitmap result = Bitmap.createBitmap((images.get(0).getWidth() + 40) * imagesInRow, (images.get(0).getHeight() + 40) * imagesInColumn, Bitmap.Config.RGB_565);
+        int imgHeight = images.get(0).getHeight() + 40;
+        int imgWidth = images.get(0).getWidth() + 40;
+        long resolution = imgWidth * imagesInRow * imgHeight * imagesInColumn;
+        boolean scaled = false;
+        if (resolution > 20000000){
+            imgHeight = Math.round((float)imgHeight * 20000000 / resolution);
+            imgWidth = Math.round((float)imgWidth * 20000000 / resolution);
+            scaled = true;
+        }
+
+        Bitmap result = Bitmap.createBitmap(imgWidth * imagesInRow, imgHeight * imagesInColumn, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(result);
+        canvas.drawColor(Color.WHITE);
         Paint paint = new Paint();
         for (int i = 0; i < images.size(); i++) {
-            Bitmap currentImage = addWhiteBorder(images.get(i), 20);
+            Bitmap currentImage;
+            if (scaled){
+                currentImage = PhotoAlbumHelper.getScaledBitmap(addWhiteBorder(images.get(i), 20), imgHeight);
+            }
+            else {
+                currentImage = addWhiteBorder(images.get(i), 20);
+            }
             canvas.drawBitmap(currentImage, currentImage.getWidth() * (i % imagesInRow), currentImage.getHeight() * (i / imagesInRow), paint);
         }
 
