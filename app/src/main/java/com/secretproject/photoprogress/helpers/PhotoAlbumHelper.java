@@ -195,14 +195,25 @@ public class PhotoAlbumHelper {
         return albumPhotos;
     }
 
-    public static Bitmap getScaledBitmap(Bitmap origianlImage, int outputImgHeigh) {
+    public static Bitmap getScaledBitmap(Bitmap originalImage, int outputImgHeight) {
 
-        if(origianlImage==null)
+        if(originalImage==null)
             return null;
 
-        float aspectRation = (float) origianlImage.getWidth() / origianlImage.getHeight();
-        int imgWidth = Math.round(aspectRation * outputImgHeigh);
+        float aspectRation = (float) originalImage.getWidth() / originalImage.getHeight();
+        int imgWidth = Math.round(aspectRation * outputImgHeight);
 
-        return Bitmap.createScaledBitmap(origianlImage, imgWidth, outputImgHeigh, false);
+        return Bitmap.createScaledBitmap(originalImage, imgWidth, outputImgHeight, false);
+    }
+
+    public static Bitmap getScaledBitmapFromWidth(Bitmap originalImage, int outputImgWidth) {
+
+        if(originalImage==null)
+            return null;
+
+        float aspectRatio = (float) originalImage.getHeight() / originalImage.getWidth();
+        int imgHeight = Math.round(aspectRatio * outputImgWidth);
+
+        return Bitmap.createScaledBitmap(originalImage, outputImgWidth, imgHeight, false);
     }
 }

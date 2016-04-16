@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import com.secretproject.photoprogress.R;
 import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
+import com.secretproject.photoprogress.helpers.TouchImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,7 +50,10 @@ public class PosterActivity extends AppCompatActivity {
             imagesInRow++;
         }
 
-        //setPoster(images, imagesInRow, imagesInColumn);
+        TouchImageView posterView = (TouchImageView) findViewById(R.id.imgViewPoster);
+
+        setPoster(images, 1, images.size());
+        posterView.setVisibility(View.GONE);
 
         Spinner columnsSpinner = (Spinner) findViewById(R.id.columnsSpinner);
 
@@ -159,9 +163,17 @@ public class PosterActivity extends AppCompatActivity {
 
         int width = dm.widthPixels;
 
-        Bitmap scaledImage = PhotoAlbumHelper.getScaledBitmap(result, width / 2);
+        Bitmap scaledImage = null;
+
+        if (imagesInColumn > imagesInRow){
+            scaledImage = PhotoAlbumHelper.getScaledBitmap(result, width);
+        }
+        else{
+            scaledImage = PhotoAlbumHelper.getScaledBitmapFromWidth(result, width);
+        }
 
         posterView.setImageBitmap(scaledImage);
+        posterView.setVisibility(View.VISIBLE);
 
         resultImage = result;
     }
