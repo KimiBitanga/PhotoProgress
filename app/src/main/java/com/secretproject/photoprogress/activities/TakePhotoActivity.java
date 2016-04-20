@@ -28,6 +28,7 @@ import com.secretproject.photoprogress.R;
 import com.secretproject.photoprogress.ViewModels.CameraPreview;
 import com.secretproject.photoprogress.data.PhotoAlbum;
 import com.secretproject.photoprogress.helpers.PhotoAlbumHelper;
+import com.secretproject.photoprogress.helpers.TouchImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -169,9 +170,8 @@ public class TakePhotoActivity extends AppCompatActivity {
                                 matrix.postRotate(90);
                                 Bitmap rotetedBitMap = Bitmap.createBitmap(takenPhoto, 0, 0, takenPhoto.getWidth(), takenPhoto.getHeight(), matrix, true);
 
-                                ImageView takenPhotoImage = (ImageView) findViewById(R.id.takenPhotoImgView);
-
-                                takenPhotoImage.setImageBitmap(rotetedBitMap);
+                                TouchImageView posterView = (TouchImageView) findViewById(R.id.takenPhotoImgView);
+                                posterView.setImageBitmap(rotetedBitMap);
 
                                 FrameLayout frameLayout = (FrameLayout) findViewById(R.id.activity_take_photo_frame);
                                 frameLayout.setVisibility(View.GONE);

@@ -30,6 +30,8 @@
     <string name="delete_album_button_content">Delete album</string>
     <string name="title_activity_poster">PosterActivity</string>
     <string name="delete_photo_menu_item_title">Delete photo</string>
+    <string name="copy_photo_to_gallery_menu_item_title">Copy to gallery</string>
+    <string name="share_photo_menu_item_title">Share photo</string>
 </resources>
 
 
