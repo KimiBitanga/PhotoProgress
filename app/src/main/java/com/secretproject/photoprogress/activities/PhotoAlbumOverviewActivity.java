@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -49,8 +50,6 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         onShowVideoPreviewButtonListener();
         onMakeImagePostersButtonListener();
         onMakeNewPhotoButtonListener();
-        onEditAlbumButtonListener();
-        onDeleteAlbumButtonListener();
 
         photoAlbum = PhotoAlbumHelper.CurrentPhotoAlbum;
         if(photoAlbum == null){
@@ -192,28 +191,40 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
         });
     }
 
-    public void onEditAlbumButtonListener(){
+    @Override
+    public void onBackPressed() {
 
-        Button editAlbumBtn=(Button)findViewById(R.id.editAlbumBtn);
-        editAlbumBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
+        RelativeLayout albumOverviewRl=(RelativeLayout)findViewById(R.id.albumOverviewRL);
+        if(albumOverviewRl.getVisibility()==View.GONE){
+            RelativeLayout photoOverviewRl = (RelativeLayout) findViewById(R.id.photoOverviewRL);
+            albumOverviewRl.setVisibility(View.VISIBLE);
+            photoOverviewRl.setVisibility(View.GONE);
+            return;
+        }
 
-                startActivity(new Intent(PhotoAlbumOverviewActivity.this, SettingsActivity.class));
-            }
-        });
+        startActivity(new Intent(PhotoAlbumOverviewActivity.this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        return;
     }
 
-    public void onDeleteAlbumButtonListener(){
-        Button deleteAlbumBtn=(Button)findViewById(R.id.deleteAlbumBtn);
-        deleteAlbumBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
 
-                //This code needs to bre extracted to helper method because popup will be used in several situations !
+        refreshPhotosListView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_album:
+                PhotoAlbumHelper.CurrentPhotoAlbum = photoAlbum;
+                startActivity(new Intent(PhotoAlbumOverviewActivity.this, SettingsActivity.class));
+                return true;
+
+            case R.id.action_delete_album:
                 AlertDialog.Builder builder = new AlertDialog.Builder(PhotoAlbumOverviewActivity.this);
-                builder.setMessage("Delete of album will delete all it's photos. Are you sure you want to delete album?")
+                builder.setMessage("This will delete all photos of the album. Are you sure you want to delete album?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -237,30 +248,20 @@ public class PhotoAlbumOverviewActivity extends AppCompatActivity {
 
                 AlertDialog alert = builder.create();
                 alert.show();
-            }
-        });
-    }
-    @Override
-    public void onBackPressed() {
+                return true;
 
-        RelativeLayout albumOverviewRl=(RelativeLayout)findViewById(R.id.albumOverviewRL);
-        if(albumOverviewRl.getVisibility()==View.GONE){
-            RelativeLayout photoOverviewRl = (RelativeLayout) findViewById(R.id.photoOverviewRL);
-            albumOverviewRl.setVisibility(View.VISIBLE);
-            photoOverviewRl.setVisibility(View.GONE);
-            return;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-
-        startActivity(new Intent(PhotoAlbumOverviewActivity.this, MainActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        return;
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-
-        refreshPhotosListView();
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_photo_album_overview, menu);
+        return true;
     }
 
     private void refreshPhotosListView() {
