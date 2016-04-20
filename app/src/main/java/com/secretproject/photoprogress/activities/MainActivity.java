@@ -73,9 +73,11 @@ public class MainActivity extends Activity {
     private void refreshAlbumListView() {
         Collection<PhotoAlbum> albums = PhotoAlbumHelper.getAllPhotoAlbums();
 
-        albumAdapter.clear();
-        albumAdapter.addAll(albums);
-        albumAdapter.notifyDataSetChanged();
+        if (albums != null) {
+            albumAdapter.clear();
+            albumAdapter.addAll(albums);
+            albumAdapter.notifyDataSetChanged();
+        }
     }
 
 }

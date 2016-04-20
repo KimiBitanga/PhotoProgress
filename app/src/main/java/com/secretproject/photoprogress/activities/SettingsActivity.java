@@ -31,7 +31,7 @@ import java.util.Collections;
 public class SettingsActivity extends AppCompatActivity {
 
     public static TextView tvNotification;
-    private int id = -1;
+    private int id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         else{
             PhotoAlbumHelper.CurrentPhotoAlbum = new PhotoAlbum();
-            PhotoAlbumHelper.CurrentPhotoAlbum.setId(-1);
+            PhotoAlbumHelper.CurrentPhotoAlbum.setId(0);
         }
 
         onSaveButtonListener();
@@ -73,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PhotoAlbum album = null;
-                if (id >= 0) {
+                if (id > 0) {
                     album = PhotoAlbumHelper.CurrentPhotoAlbum;
                 } else {
                     album = new PhotoAlbum();
@@ -110,8 +110,8 @@ public class SettingsActivity extends AppCompatActivity {
                     album.setUseNotifications(false);
                 }
 
-                if (id < 0) {
-                    int newId = -1;
+                if (id <= 0) {
+                    int newId = 0;
                     if (photoAlbums != null && photoAlbums.size() > 0) {
                         for (PhotoAlbum photoAlbum : photoAlbums) {
                             if (newId < photoAlbum.getId()) {
@@ -142,7 +142,9 @@ public class SettingsActivity extends AppCompatActivity {
 
                 PhotoAlbumHelper.CurrentPhotoAlbum = album;
 
-                triggerAlarm();
+                if (album.getUseNotifications()) {
+                    triggerAlarm();
+                }
 
                 startActivity(new Intent(SettingsActivity.this, PhotoAlbumOverviewActivity.class));
             }
@@ -178,7 +180,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     alarmManager.cancel(pendingIntent);
 
-                    if (id >= 0) {
+                    if (id > 0) {
                         PhotoAlbumHelper.CurrentPhotoAlbum.setUseNotifications(false);
 
                         try {
